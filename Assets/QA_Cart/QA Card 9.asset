@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a8172eb82f5f724b8b06159b9560beb, type: 3}
+  m_Name: QA Card 9
+  m_EditorClassIdentifier: 
+  answers:
+  - Hierarchy
+  - Inspector
+  - Project
+  - Game
+  answer: 2
+  stringAnswer: 
+  question: "\xBFQue ventana se utiliza para organizar y gestionar los activos en
+    Unity, como texturas, modelos y sonidos?"
