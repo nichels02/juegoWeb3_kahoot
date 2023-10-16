@@ -22,7 +22,7 @@ public class QAEndPanel : MonoBehaviour
 
         //panelImage.sprite = sprites[totalPoints];
         //panelImage.color = fullcolor;
-        pointsText.text = points.ToString();
+        pointsText.text = "Points:" + points;
         //starAnimator.gameObject.SetActive(true);
         //button.gameObject.SetActive(true);
         //starAnimator.Play("QA_Win" + totalPoints);

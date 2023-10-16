@@ -1,13 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class QAManager : MonoBehaviour
 {
     int vida = 3;
+    int Time_M = 3;
+    int Time_s = 0;
+    float time = 0;
+    public Text vida_text;
+    public Text point_text;
+    public Text Time_text;
     public QACard[] cards;
     public QAButton[] buttons = new QAButton[4];
+
+    public bool ganaste = false;
     //public Image[] images = new Image[4];
 
     public Text question;
@@ -20,6 +28,8 @@ public class QAManager : MonoBehaviour
     //public Color correctTextColor = Color.white;
     //public Color wrongButtonColor;
     public QAEndPanel panel;
+
+    public GameObject[] IndicadorDeFallas = new GameObject[4];
     //public SpriteRenderer sr;
     //public Sprite normalButtonSprite;
     //public Sprite correctButtonSprite;
@@ -38,7 +48,7 @@ public class QAManager : MonoBehaviour
     private void Awake()
     {
         //sr = GetComponent<SpriteRenderer>();
-        panel = FindObjectOfType<QAEndPanel>();
+        //panel = FindObjectOfType<QAEndPanel>();
         panel.gameObject.SetActive(false);
         //for (int i = 0; i < images.Length; i++)
         //{
@@ -53,6 +63,38 @@ public class QAManager : MonoBehaviour
         NextAnswer();
     }
 
+    private void Update()
+    {
+        if ((Time_M > 0 || Time_s > 0) && ganaste == false) 
+        {
+            time += Time.deltaTime;
+            if (time >= 1)
+            {
+                time = 0;
+                Time_s--;
+                if (Time_s<0)
+                {
+                    Time_M--;
+                    Time_s = 59;
+                }
+
+                if (Time_s >= 10)
+                {
+                    Time_text.text = Time_M + ":" + Time_s;
+                }
+                else
+                {
+                    Time_text.text = Time_M + ":0" + Time_s;
+                }
+            }
+        }
+        else
+        {
+            final();
+        }
+        
+    }
+
     public void EvaluateAnswer(int index)
     {
         print("hola");
@@ -61,12 +103,17 @@ public class QAManager : MonoBehaviour
         {
             print("Good");
             //audioSource.PlayOneShot(trueAnswerClip);
+            for (int i = 0; i < 4; i++)
+            {
+                IndicadorDeFallas[i].GetComponent<RawImageX>().reinicio();
+            }
             StartCoroutine(CompleteAnswer(index));
         }
         else
         {
             print("Wrong");
             //audioSource.PlayOneShot(wrongAnswerClip);
+            IndicadorDeFallas[index].GetComponent<RawImageX>().fallaste();
             StartCoroutine(WrongAnswer(index));
         }
 
@@ -95,21 +142,8 @@ public class QAManager : MonoBehaviour
         }
         else
         {
-            panel.gameObject.SetActive(true);
-            int p = 0;
-            if (totalScore < 4)
-            {
-                p = 0;
-            }
-            else if (totalScore > 3 && totalScore < 8)
-            {
-                p = 1;
-            }
-            else if (totalScore > 7)
-            {
-                p = 2;
-            }
-            panel.Initialize(p);
+            
+            final();
             //audioSource.PlayOneShot(winClip);
         }
 
@@ -124,6 +158,7 @@ public class QAManager : MonoBehaviour
         //buttons[index].text.color = correctTextColor;
         totalScore += point;
         point = 0;
+        point_text.text = "Point: " + totalScore;
         yield return new WaitForSeconds(1f);
         //images[index].color = noColor;
         buttons[index].button.interactable = true;
@@ -148,13 +183,44 @@ public class QAManager : MonoBehaviour
         //buttons[index].buttonImage.color = wrongButtonColor;
         point = 0;
         vida--;
+        print(vida);
+        vida_text.text = "Lives: " + vida;
         if (vida <= 0)
         {
-            print("Perdiste");
+            print("Perdiste" );
+            final();
+            
         }
         yield return new WaitForSeconds(1f);
         //images[index].color = noColor;
         buttons[index].button.interactable = true;
         //buttons[index].buttonImage.color = fullColor;
     }
+
+
+    void final()
+    {
+        ganaste = true;
+        panel.gameObject.SetActive(true);
+        int p = 0;
+        if (Time_M != 0)
+        {
+            p = ((Time_M * 60 + Time_s) * vida / 100) * totalScore;
+        }
+        else if (Time_s != 0)
+        {
+            p = Time_s * vida / 100 * totalScore;
+        }
+        else
+        {
+            p = totalScore;
+        }
+        panel.Initialize(p);
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
 }
