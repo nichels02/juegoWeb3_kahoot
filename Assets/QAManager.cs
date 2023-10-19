@@ -156,7 +156,7 @@ public class QAManager : MonoBehaviour
         buttons[index].button.interactable = false;
         //buttons[index].buttonImage.sprite = correctButtonSprite;
         //buttons[index].text.color = correctTextColor;
-        totalScore += point;
+        totalScore += 1;
         point = 0;
         point_text.text = "Point: " + totalScore;
         yield return new WaitForSeconds(1f);
@@ -202,19 +202,55 @@ public class QAManager : MonoBehaviour
     {
         ganaste = true;
         panel.gameObject.SetActive(true);
-        int p = 0;
+        float p = 0;
+        float parte1 = 0;
+        float parte2 = 0;
+        float parte3 = 0;
         if (Time_M != 0)
         {
-            p = ((Time_M * 60 + Time_s) * vida / 100) * totalScore;
+            parte1 = Time_M * 60 + Time_s;
+            print("parte1: " + parte1);
+            parte2 = parte1 * vida / 100;
+            print("parte2: " + parte2);
+            parte3 = parte2 * totalScore;
+            print("parte3: " + parte3);
+            p = parte3;
+
+            //p = ((Time_M * 60 + Time_s) * vida / 100) * totalScore;
+            print("min:" + Time_M);
+            print("sec:" + Time_s);
+            print("sec:" + vida);
+            print("puntaje:" + totalScore);
+            print("p:" + p);
+            print("");
+            print("");
+
         }
         else if (Time_s != 0)
         {
-            p = Time_s * vida / 100 * totalScore;
+            parte2 = Time_s * vida / 100;
+            print("parte2: " + parte2);
+            parte3 = parte2 * totalScore;
+            print("parte3: " + parte3);
+            p = parte3;
+
+            //p = Time_s * vida / 100 * totalScore;
+            print("sec:" + Time_s);
+            print("sec:" + vida);
+            print("puntaje:" + totalScore);
+            print("p:" + p);
+            print("");
+            print("");
+            print("");
         }
         else
         {
             p = totalScore;
+            print("perdiste:" + p);
         }
+
+        p = Mathf.Round(p);
+
         panel.Initialize(p);
     }
 

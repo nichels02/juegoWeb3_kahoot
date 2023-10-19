@@ -17,7 +17,7 @@ public class QAEndPanel : MonoBehaviour
 
 
 
-    public void Initialize(int points)
+    public void Initialize(float points)
     {
 
         //panelImage.sprite = sprites[totalPoints];
